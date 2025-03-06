@@ -43,9 +43,14 @@
           <button @click="removeAllTodos(priority)">
             Delete all <font-awesome-icon :icon="faTrash" />
           </button>
-          <button @click="sortByCreationTime(priority)">
-            Sort <font-awesome-icon :icon="faSort" />
-          </button>
+          <select
+            value="latest"
+            @change="sortByCreationTime(priority)"
+            class="form-select form-select-sm"
+          >
+            <option value="latest">Latest</option>
+            <option value="oldest">Oldest</option>
+          </select>
         </div>
         <ul>
           <li v-for="todo in timeSortedTodos(priority)" :key="todo.id">
@@ -70,11 +75,11 @@ import { useTodoStore } from '../stores/todo'
 import AddToDoView from '@/components/AddToDoView.vue'
 import ToDoCard from '@/components/ToDoCard.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faTrash, faSort } from '@fortawesome/free-solid-svg-icons'
-import type { Todo } from '../types/todo'
+import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import type { ToDo } from '../../types/todo'
 
 const todoStore = useTodoStore()
-const selectedTodo = ref<Todo | null>(null)
+const selectedTodo = ref<ToDo | null>(null)
 const sortOrder = ref<{ [key: string]: boolean }>({
   critical: false,
   high: false,
@@ -107,26 +112,26 @@ const removeTodo = (id: number) => {
 }
 
 const toggleCompleted = (id: number) => {
-  const todo = todoStore.todos.find((todo: Todo) => todo.id === id)
+  const todo = todoStore.todos.find((todo: ToDo) => todo.id === id)
   if (todo) {
     todo.completed = !todo.completed
   }
 }
 
 const changePriority = (payload: { id: number; priority: string }) => {
-  const todo = todoStore.todos.find((todo: Todo) => todo.id === payload.id)
+  const todo = todoStore.todos.find((todo: ToDo) => todo.id === payload.id)
   if (todo) {
     todo.priority = payload.priority
     showColumn(payload.priority)
   }
 }
 
-const editTodo = (todo: Todo) => {
+const editTodo = (todo: ToDo) => {
   selectedTodo.value = todo
 }
 
 const removeAllTodos = (priority: string) => {
-  todoStore.todos = todoStore.todos.filter((todo: Todo) => todo.priority !== priority)
+  todoStore.todos = todoStore.todos.filter((todo: ToDo) => todo.priority !== priority)
 }
 
 const sortByCreationTime = (priority: string) => {
@@ -136,8 +141,8 @@ const sortByCreationTime = (priority: string) => {
 const timeSortedTodos = (priority: string) => {
   return computed(() => {
     return todoStore.todos
-      .filter((todo: Todo) => todo.priority === priority)
-      .sort((a: Todo, b: Todo) => {
+      .filter((todo: ToDo) => todo.priority === priority)
+      .sort((a: ToDo, b: ToDo) => {
         const timeA = new Date(a.id).getTime()
         const timeB = new Date(b.id).getTime()
         return sortOrder.value[priority] ? timeA - timeB : timeB - timeA
@@ -146,10 +151,12 @@ const timeSortedTodos = (priority: string) => {
 }
 
 const showColumn = (priority: string) => {
-  for (const key in visibleColumns.value) {
-    visibleColumns.value[key] = false
+  if (window.innerWidth < 769) {
+    for (const key in visibleColumns.value) {
+      visibleColumns.value[key] = false
+    }
+    visibleColumns.value[priority] = true
   }
-  visibleColumns.value[priority] = true
 }
 
 const isColumnVisible = (priority: string) => {
@@ -258,6 +265,11 @@ select {
   background-color: transparent;
   cursor: pointer;
   color: #525252;
+}
+
+.action-bar .form-select {
+  width: 100px;
+  margin-right: 17px;
 }
 
 .todo-nav {

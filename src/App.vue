@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ToDoView from './components/ToDoView.vue'
+import ToDoView from './views/ToDoView.vue'
 </script>
 
 <template>

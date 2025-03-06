@@ -55,14 +55,12 @@ import { ref, watch } from 'vue'
 import { useTodoStore } from '../stores/todo'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import type { Todo } from '../types/todo'
+import type { ToDo } from '../../types/todo'
+import { defineProps, defineEmits } from 'vue'
 
-const props = defineProps({
-  todo: {
-    type: Object as () => Todo | null,
-    default: null,
-  },
-})
+const props = defineProps<{
+  todo: ToDo | null
+}>()
 
 const emit = defineEmits<{
   (e: 'onAdd', priority: string): void

@@ -1,9 +1,9 @@
 import { ref, watch, type Ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { Todo } from '../types/todo'
+import type { ToDo } from '../../types/todo'
 
 interface TodoStore {
-  todos: Ref<Todo[]>
+  todos: Ref<ToDo[]>
   addTodo: (newTodo: { title: string; description?: string; priority: string }) => void
   removeTodo: (id: number) => void
   setPriority: (id: number, priority: string) => void
@@ -15,7 +15,7 @@ interface TodoStore {
 }
 
 export const useTodoStore = defineStore<'todo', TodoStore>('todo', () => {
-  const todos = ref<Todo[]>([])
+  const todos = ref<ToDo[]>([])
   const savedTodos = localStorage.getItem('todos')
   if (savedTodos) {
     todos.value = JSON.parse(savedTodos)

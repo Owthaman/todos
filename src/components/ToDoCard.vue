@@ -61,16 +61,16 @@
 import { defineProps, defineEmits } from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faUndo, faCheck, faTrash, faPen } from '@fortawesome/free-solid-svg-icons'
-import type { Todo } from '../types/todo'
+import type { ToDo } from '../../types/todo'
 
 const props = defineProps<{
-  todo: Todo
+  todo: ToDo
   priority: string
 }>()
 
 const emit = defineEmits<{
   (e: 'remove', id: number): void
-  (e: 'edit', todo: Todo): void
+  (e: 'edit', todo: ToDo): void
   (e: 'toggle', id: number): void
   (e: 'update-priority', payload: { id: number; priority: string }): void
 }>()
